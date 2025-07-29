@@ -21,7 +21,7 @@ export default class Contacto {
     direccion,
     notas
   ) {
-    this.#id = crypto.randomUUID();
+    this.#id = crypto?.randomUUID?.() ?? Date.now().toString() + Math.random().toString(36).slice(2, 10);
     this.#nombre = nombre;
     this.#apellido = apellido;
     this.#telefono = telefono;
