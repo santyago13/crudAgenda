@@ -16,8 +16,8 @@ const inputPuestoTrabajo = document.getElementById("puestoTrabajo");
 const inputDireccion = document.getElementById("direccion");
 const inputNotas = document.getElementById("notas");
 // verificar si hay contactos en el local storage, si no hago un array vacio
-const agenda = JSON.parse(localStorage.getItem('agendaKey')) || [];
-console.log(agenda)
+const agenda = JSON.parse(localStorage.getItem("agendaKey")) || [];
+console.log(agenda);
 // FUNCIONES
 function crearContacto() {
   //aqui tengo que crear el contacto
@@ -36,10 +36,18 @@ function crearContacto() {
   );
   console.log(contactoNuevo);
   //guardar el contacto en la agenda de contactos
-  agenda.push(contactoNuevo)
+  agenda.push(contactoNuevo);
   //guardar la agenda en el localstorage
   guardarLocalStorage();
   //mostrar un mensaje al usuario final
+  Swal.fire({
+    title: "Contacto creado",
+    text: `El contacto ${inputNombre.value} fue creado correctamente`,
+    icon: "success",
+    confirmButtonText: "Ok",
+  });
+  //limpiar el formulario
+  limpiarFormulario();
 }
 
 function limpiarFormulario() {
@@ -47,7 +55,7 @@ function limpiarFormulario() {
 }
 
 function guardarLocalStorage() {
-    localStorage.setItem('agendaKey', JSON.stringify(agenda))
+  localStorage.setItem("agendaKey", JSON.stringify(agenda));
 }
 
 // MANEJADORES DE EVENTOS
@@ -59,5 +67,4 @@ formularioContacto.addEventListener("submit", (e) => {
   e.preventDefault();
   // aqui tengo que crear / editar contacto
   crearContacto();
-  limpiarFormulario();
 });
