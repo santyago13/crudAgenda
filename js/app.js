@@ -50,6 +50,9 @@ function crearContacto() {
   });
   //limpiar el formulario
   limpiarFormulario();
+  //dibuje el contacto en la tabla
+  console.log(contactoNuevo)
+  dibujarFila(contactoNuevo, agenda.length);
 }
 
 function limpiarFormulario() {
@@ -72,6 +75,7 @@ function cargarContactos() {
 }
 
 function dibujarFila(itemContacto, fila) {
+  console.log(itemContacto);
   tbody.innerHTML += `
               <tr>
                 <th scope="row">${fila}</th>

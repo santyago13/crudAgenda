@@ -34,100 +34,100 @@ export default class Contacto {
   }
 
   // Getters
-  get getid() {
+  get id() {
     return this.#id;
   }
 
-  get getnombre() {
+  get nombre() {
     return this.#nombre;
   }
 
-  get getapellido() {
+  get apellido() {
     return this.#apellido;
   }
 
-  get gettelefono() {
+  get telefono() {
     return this.#telefono;
   }
 
-  get getemail() {
+  get email() {
     return this.#email;
   }
 
-  get getimagen() {
+  get imagen() {
     return this.#imagen;
   }
 
-  get getempresa() {
+  get empresa() {
     return this.#empresa;
   }
 
-  get getpuestoTrabajo() {
+  get puestoTrabajo() {
     return this.#puestoTrabajo;
   }
 
-  get getdireccion() {
+  get direccion() {
     return this.#direccion;
   }
 
-  get getnotas() {
+  get notas() {
     return this.#notas;
   }
 
   // Setters
-  set setid(nuevoId) {
+  set id(nuevoId) {
     this.#id = nuevoId;
   }
 
-  set setnombre(nuevoNombre) {
+  set nombre(nuevoNombre) {
     this.#nombre = nuevoNombre;
   }
 
-  set setapellido(nuevoApellido) {
+  set apellido(nuevoApellido) {
     this.#apellido = nuevoApellido;
   }
 
-  set settelefono(nuevoTelefono) {
+  set telefono(nuevoTelefono) {
     this.#telefono = nuevoTelefono;
   }
 
-  set setemail(nuevoEmail) {
+  set email(nuevoEmail) {
     this.#email = nuevoEmail;
   }
 
-  set setimagen(nuevaImagen) {
+  set imagen(nuevaImagen) {
     this.#imagen = nuevaImagen;
   }
 
-  set setempresa(nuevaEmpresa) {
+  set empresa(nuevaEmpresa) {
     this.#empresa = nuevaEmpresa;
   }
 
-  set setpuestoTrabajo(nuevoPuestoTrabajo) {
+  set puestoTrabajo(nuevoPuestoTrabajo) {
     this.#puestoTrabajo = nuevoPuestoTrabajo;
   }
 
-  set setdireccion(nuevaDireccion) {
+  set direccion(nuevaDireccion) {
     this.#direccion = nuevaDireccion;
   }
 
-  set setnotas(nuevasNotas) {
+  set notas(nuevasNotas) {
     this.#notas = nuevasNotas;
   }
 
   // metodo para almacenar el objeto en el localstorage / sessionstorage
   toJSON() {
     return {
-      id: this.getid,
-      nombre: this.getnombre,
-      apellido: this.getapellido,
-      telefono: this.gettelefono,
-      imagen: this.getimagen,
-      direccion: this.getdireccion,
-      empresa: this.getempresa,
-      puestoTrabajo: this.getpuestoTrabajo,
-      email: this.getemail,
-      notas: this.getnotas,
+      id: this.id,
+      nombre: this.nombre,
+      apellido: this.apellido,
+      telefono: this.telefono,
+      imagen: this.imagen,
+      direccion: this.direccion,
+      empresa: this.empresa,
+      puestoTrabajo: this.puestoTrabajo,
+      email: this.email,
+      notas: this.notas,
     };
   }
 }
