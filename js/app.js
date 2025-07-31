@@ -44,6 +44,7 @@ function crearContacto() {
   //mostrar un mensaje al usuario final
   Swal.fire({
     title: "Contacto creado",
+    theme: "dark",
     text: `El contacto ${inputNombre.value} fue creado correctamente`,
     icon: "success",
     confirmButtonText: "Ok",
@@ -51,7 +52,7 @@ function crearContacto() {
   //limpiar el formulario
   limpiarFormulario();
   //dibuje el contacto en la tabla
-  console.log(contactoNuevo)
+  console.log(contactoNuevo);
   dibujarFila(contactoNuevo, agenda.length);
 }
 
@@ -67,7 +68,7 @@ function cargarContactos() {
   //verificar si tengo contactos para cargar
   if (agenda.length !== 0) {
     //recorrer mi agenda y por cada elemento de la agenda hacer una fila
-    agenda.map((itemContacto, indice)=> dibujarFila(itemContacto, indice+1))
+    agenda.map((itemContacto, indice) => dibujarFila(itemContacto, indice + 1));
   } else {
     //todo dibujar un parrafo que diga que no tengo contactos
   }
@@ -99,7 +100,7 @@ function dibujarFila(itemContacto, fila) {
                     <button class="btn btn-warning">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-danger">
+                    <button class="btn btn-danger" onclick="borrarContacto('${itemContacto.id}')">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
@@ -107,6 +108,32 @@ function dibujarFila(itemContacto, fila) {
               </tr>
               `;
 }
+
+window.borrarContacto = (id) => {
+  /* El documento html no puede acceder a esta funcion porque este archivo js esta declarada
+  como tipo modulo type="module" y se tiene que hacer que esta funcion este en el objeto window
+  que esta arriba del documento html y asi poder acceder a la funcion desde el documento html*/
+  Swal.fire({
+    title: "Estas seguro que quieres eliminar este contacto?",
+    text: "No puedes revertir esto!",
+    icon: "warning",
+    theme: "dark",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Eliminar",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: "Eliminado",
+        theme: "dark",
+        text: "El contacto se elimino correctamente!",
+        icon: "success",
+      });
+    }
+  });
+};
 
 // MANEJADORES DE EVENTOS
 btnAgregarContacto.addEventListener("click", () => {
