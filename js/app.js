@@ -1,6 +1,6 @@
 import Contacto from "./contacto.js";
 
-// ELEMENTOS DEL DOM
+// ! ELEMENTOS DEL DOM
 const btnAgregarContacto = document.getElementById("btnAgregarContacto");
 const modalFormContacto = new bootstrap.Modal(
   document.getElementById("contactoModal")
@@ -17,11 +17,12 @@ const inputDireccion = document.getElementById("direccion");
 const inputNotas = document.getElementById("notas");
 const tbody = document.getElementById("tablaContactoBody");
 let estoyCreando = true; // cuando es true crea contacto, cuando esta en false edita el contacto
+let idContacto = null;
 // verificar si hay contactos en el local storage, si no hago un array vacio
 const agenda = JSON.parse(localStorage.getItem("agendaKey")) || [];
 console.log(agenda);
 
-// FUNCIONES
+// ! FUNCIONES
 function crearContacto() {
   //aqui tengo que crear el contacto
   //todo Agregar validaciones
@@ -151,6 +152,7 @@ window.borrarContacto = (id) => {
 
 window.prepararContacto = (id) => {
   //todo modificar el titulo del formulario
+  estoyCreando = false;
   // cargar los datos del contacto que quiero editar
   const contactoBuscado = agenda.find((contacto) => contacto.id === id);
   // mostrar los datos del contacto en el form
@@ -163,13 +165,34 @@ window.prepararContacto = (id) => {
   inputPuestoTrabajo.value = contactoBuscado.puestoTrabajo;
   inputDireccion.value = contactoBuscado.direccion;
   inputNotas.value = contactoBuscado.notas;
+  idContacto = id;
   // cambio la variable que controla el crear/editar
 
-//  abrir el modal
+  //  abrir el modal
   modalFormContacto.show();
 };
 
-function editarContacto() {}
+function editarContacto() {
+  //buscar en que posicion del array esta el contacto con ID
+  const indiceContacto = agenda.findIndex(
+    (contacto) => contacto.id === idContacto
+  );
+  // modificar el contacto
+  agenda[indiceContacto].nombre = inputNombre.value;
+  agenda[indiceContacto].apellido = inputApellido.value;
+  agenda[indiceContacto].telefono = inputTelefono.value;
+  agenda[indiceContacto].email = inputEmail.value;
+  agenda[indiceContacto].imagen = inputImagen.value;
+  agenda[indiceContacto].empresa = inputEmpresa.value;
+  agenda[indiceContacto].puestoTrabajo = inputPuestoTrabajo.value;
+  agenda[indiceContacto].direccion = inputDireccion.value;
+  agenda[indiceContacto].notas = inputNotas.value;
+  // actualizar el local storage
+  guardarLocalStorage();
+  // actualizar el tbody
+  //cerrar el modal
+  modalFormContacto.hide();
+}
 
 // ! MANEJADORES DE EVENTOS
 btnAgregarContacto.addEventListener("click", () => {
