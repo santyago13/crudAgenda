@@ -97,7 +97,7 @@ function dibujarFila(itemContacto, fila) {
                     <button class="btn btn-info">
                       <i class="bi bi-eye"></i>
                     </button>
-                    <button class="btn btn-warning">
+                    <button class="btn btn-warning" onclick="prepararContacto('${itemContacto.id}')">
                       <i class="bi bi-pencil"></i>
                     </button>
                     <button class="btn btn-danger" onclick="borrarContacto('${itemContacto.id}')">
@@ -147,6 +147,23 @@ window.borrarContacto = (id) => {
     }
   });
 };
+
+window.prepararContacto = (id) => {
+  // cargar los datos del contacto que quiero editar
+  const contactoBuscado = agenda.find((contacto) => contacto.id === id);
+  // mostrar los datos del contacto en el form
+  inputNombre.value = contactoBuscado.nombre;
+  inputApellido.value = contactoBuscado.apellido;
+  inputTelefono.value = contactoBuscado.telefono;
+  inputEmail.value = contactoBuscado.email;
+  inputImagen.value = contactoBuscado.imagen;
+  inputEmpresa.value = contactoBuscado.empresa;
+  inputPuestoTrabajo.value = contactoBuscado.puestoTrabajo;
+  inputDireccion.value = contactoBuscado.direccion;
+  inputNotas.value = contactoBuscado.notas;
+    // abrir el modal
+  modalFormContacto.show();
+}
 
 // MANEJADORES DE EVENTOS
 btnAgregarContacto.addEventListener("click", () => {
