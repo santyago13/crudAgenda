@@ -16,6 +16,7 @@ const inputPuestoTrabajo = document.getElementById("puestoTrabajo");
 const inputDireccion = document.getElementById("direccion");
 const inputNotas = document.getElementById("notas");
 const tbody = document.getElementById("tablaContactoBody");
+let estoyCreando = true; // cuando es true crea contacto, cuando esta en false edita el contacto
 // verificar si hay contactos en el local storage, si no hago un array vacio
 const agenda = JSON.parse(localStorage.getItem("agendaKey")) || [];
 console.log(agenda);
@@ -143,12 +144,13 @@ window.borrarContacto = (id) => {
         theme: "dark",
         text: "El contacto se elimino correctamente!",
         icon: "success",
-      });      
+      });
     }
   });
 };
 
 window.prepararContacto = (id) => {
+  //todo modificar el titulo del formulario
   // cargar los datos del contacto que quiero editar
   const contactoBuscado = agenda.find((contacto) => contacto.id === id);
   // mostrar los datos del contacto en el form
@@ -161,19 +163,29 @@ window.prepararContacto = (id) => {
   inputPuestoTrabajo.value = contactoBuscado.puestoTrabajo;
   inputDireccion.value = contactoBuscado.direccion;
   inputNotas.value = contactoBuscado.notas;
-    // abrir el modal
-  modalFormContacto.show();
-}
+  // cambio la variable que controla el crear/editar
 
-// MANEJADORES DE EVENTOS
+//  abrir el modal
+  modalFormContacto.show();
+};
+
+function editarContacto() {}
+
+// ! MANEJADORES DE EVENTOS
 btnAgregarContacto.addEventListener("click", () => {
+  limpiarFormulario();
+  estoyCreando = true;
   modalFormContacto.show();
 });
 
 formularioContacto.addEventListener("submit", (e) => {
   e.preventDefault();
   // aqui tengo que crear / editar contacto
-  crearContacto();
+  if (estoyCreando) {
+    crearContacto();
+  } else {
+    editarContacto();
+  }
 });
 
 cargarContactos();
