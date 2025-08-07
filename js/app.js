@@ -1,209 +1,224 @@
 import Contacto from "./contacto.js";
-
-// ! ELEMENTOS DEL DOM
+import { validarCantidadCaracteres } from "./validaciones.js";
+// elementos del DOM
 const btnAgregarContacto = document.getElementById("btnAgregarContacto");
-const modalFormContacto = new bootstrap.Modal(
+const modalFormularioContacto = new bootstrap.Modal(
   document.getElementById("contactoModal")
 );
 const formularioContacto = document.getElementById("formContacto");
 const inputNombre = document.getElementById("nombre");
 const inputApellido = document.getElementById("apellido");
-const inputTelefono = document.getElementById("telefono");
 const inputEmail = document.getElementById("email");
-const inputImagen = document.getElementById("imagen");
-const inputEmpresa = document.getElementById("empresa");
-const inputPuestoTrabajo = document.getElementById("puestoTrabajo");
+const inputTelefono = document.getElementById("telefono");
 const inputDireccion = document.getElementById("direccion");
 const inputNotas = document.getElementById("notas");
-const tbody = document.getElementById("tablaContactoBody");
-let estoyCreando = true; // cuando es true crea contacto, cuando esta en false edita el contacto
+const inputImagen = document.getElementById("imagen");
+const inputPuestoTrabajo = document.getElementById("puestoTrabajo");
+const inputEmpresa = document.getElementById("empresa");
+const tbody = document.querySelector("#tablaContactosBody");
+let estoyCreando = true;
 let idContacto = null;
-// verificar si hay contactos en el local storage, si no hago un array vacio
+// verificar si el localstorage tiene contactos, si no tiene hago un array vacio
 const agenda = JSON.parse(localStorage.getItem("agendaKey")) || [];
 console.log(agenda);
+//Funciones
 
-// ! FUNCIONES
-function crearContacto() {
-  //aqui tengo que crear el contacto
+const guardarLocalstorage = () => {
+  localStorage.setItem("agendaKey", JSON.stringify(agenda));
+};
+
+const crearContacto = () => {
+  console.log("aqui tengo que crear el contacto");
   //todo Agregar validaciones
-  //buscar los datos del formulario y crear un objeto contacto
-  const contactoNuevo = new Contacto(
-    inputNombre.value,
-    inputApellido.value,
-    inputTelefono.value,
-    inputEmail.value,
-    inputImagen.value,
-    inputEmpresa.value,
-    inputPuestoTrabajo.value,
-    inputDireccion.value,
-    inputNotas.value
-  );
-  console.log(contactoNuevo);
-  //guardar el contacto en la agenda de contactos
-  agenda.push(contactoNuevo);
-  //guardar la agenda en el localstorage
-  guardarLocalStorage();
-  //mostrar un mensaje al usuario final
-  Swal.fire({
-    title: "Contacto creado",
-    theme: "dark",
-    text: `El contacto ${inputNombre.value} fue creado correctamente`,
-    icon: "success",
-    confirmButtonText: "Ok",
-  });
-  //limpiar el formulario
-  limpiarFormulario();
-  //dibuje el contacto en la tabla
-  console.log(contactoNuevo);
-  dibujarFila(contactoNuevo, agenda.length);
-}
+  if (validacion()) {
+    //buscar los datos del formulario y crear un objeto contacto
+    const contactoNuevo = new Contacto(
+      inputNombre.value,
+      inputApellido.value,
+      inputTelefono.value,
+      inputEmail.value,
+      inputImagen.value,
+      inputEmpresa.value,
+      inputPuestoTrabajo.value,
+      inputDireccion.value,
+      inputNotas.value
+    );
+    //guardar el contacto en la agenda de contactos
+    agenda.push(contactoNuevo);
+    console.log(contactoNuevo);
+    //guardar la agenda en el localstorage
+    guardarLocalstorage();
+    //mostrar un mensaje al usuario final
+    Swal.fire({
+      title: "Contacto creado",
+      text: `El contacto ${inputNombre.value} fue creado correctamente.`,
+      icon: "success",
+      confirmButtonText: "Ok",
+    });
+    //limpiar el formulario
+    limpiarFormulario();
+    //dibuje el contacto en la tabla
+    dibujarFila(contactoNuevo, agenda.length);
+  }else{
+    console.log('hay errores en la validacion')
+  }
+};
 
 function limpiarFormulario() {
   formularioContacto.reset();
 }
 
-function guardarLocalStorage() {
-  localStorage.setItem("agendaKey", JSON.stringify(agenda));
-}
-
-function cargarContactos() {
+const cargarContactos = () => {
   //verificar si tengo contactos para cargar
   if (agenda.length !== 0) {
-    //recorrer mi agenda y por cada elemento de la agenda hacer una fila
+    //recorrer mi agenda y por cada elemento de la agenda
     agenda.map((itemContacto, indice) => dibujarFila(itemContacto, indice + 1));
   } else {
-    //todo dibujar un parrafo que diga que no tengo contactos
+    // todo: dibujar un parrafo que diga que no tenemos contactos
   }
-  //si tengo, tengo que dibujar las filas en la tabla
-}
+  // si tengo tengo que dibujar las filas en la tabla
+};
 
-function dibujarFila(itemContacto, fila) {
-  console.log(itemContacto);
+const dibujarFila = (itemContacto, fila) => {
   tbody.innerHTML += `
-              <tr>
+     <tr>
                 <th scope="row">${fila}</th>
                 <td>${itemContacto.nombre}</td>
                 <td>${itemContacto.apellido}</td>
                 <td>${itemContacto.telefono}</td>
                 <td>
                   <img
-                    src="${itemContacto.imagen}"
-                    alt="${itemContacto.nombre}"
-                    class="rounded-circle object-fit-cover"
-                    width="35px"
-                    height="35px"
+                    src=${itemContacto.imagen}
+                    alt=${itemContacto.nombre}
+                    class="img-thumbnail img-table"
                   />
                 </td>
                 <td>
-                  <div class="d-flex gap-2">
-                    <button class="btn btn-info">
-                      <i class="bi bi-eye"></i>
-                    </button>
-                    <button class="btn btn-warning" onclick="prepararContacto('${itemContacto.id}')">
-                      <i class="bi bi-pencil"></i>
-                    </button>
-                    <button class="btn btn-danger" onclick="borrarContacto('${itemContacto.id}')">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-info btn-sm me-2 btn-ver-detalle"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-warning btn-sm me-2 btn-editar"
+                    onclick="prepararContacto('${itemContacto.id}')"
+                  >
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm btn-borrar"
+                    onclick="borrarContacto('${itemContacto.id}')"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
                 </td>
               </tr>
-              `;
-}
+    `;
+};
 
 window.borrarContacto = (id) => {
-  /* El documento html no puede acceder a esta funcion porque este archivo js esta declarada
-  como tipo modulo type="module" y se tiene que hacer que esta funcion este en el objeto window
-  que esta arriba del documento html y asi poder acceder a la funcion desde el documento html*/
   Swal.fire({
-    title: "Estas seguro que quieres eliminar este contacto?",
-    text: "No puedes revertir esto!",
+    title: "Estas seguro de eliminar el contacto",
+    text: "No puedes revertir este paso",
     icon: "warning",
-    theme: "dark",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Eliminar",
+    confirmButtonText: "Borrar",
     cancelButtonText: "Cancelar",
   }).then((result) => {
+    console.log(result);
     if (result.isConfirmed) {
       // aqui agrego la logica para borrar
-      // buscar en que posicion esta el contacto con el id que quiero borrar
-      const posicionContacto = agenda.findIndex(
-        (contacto) => contacto.id === id
-      );
+      // tengo que buscar en que posicion esta el contacto con el id que quiero borrar
+      const indiceContacto = agenda.findIndex((contacto) => contacto.id === id);
       // con splice borramos el elemento de determinada posicion del array
-      agenda.splice(posicionContacto, 1);
-      // actualizar el local storage
-      guardarLocalStorage();
-      // actualizar el tbody
-      tbody.children[posicionContacto].remove();
-      //todo actualizar el numero de fila del array
-      // mensaje de se borro perfecto
+      agenda.splice(indiceContacto, 1);
+      //actualizar el localstorage
+      guardarLocalstorage();
+      //actualizar la tabla
+      tbody.children[indiceContacto].remove();
+      //todoL: actualizar el numero de fila del array.
+
       Swal.fire({
-        title: "Eliminado",
-        theme: "dark",
-        text: "El contacto se elimino correctamente!",
+        title: "Contacto eliminado",
+        text: "El contacto fue eliminado satisfactoriamente",
         icon: "success",
       });
+      console.log(agenda);
     }
   });
 };
 
 window.prepararContacto = (id) => {
-  //todo modificar el titulo del formulario
-  estoyCreando = false;
-  // cargar los datos del contacto que quiero editar
+  // todo: modificar el titulo del formulario
+  //cargar los datos del contacto para que los vea el usuario
   const contactoBuscado = agenda.find((contacto) => contacto.id === id);
-  // mostrar los datos del contacto en el form
+  console.log(contactoBuscado);
+  //mostrar los datos del contacto en el form
   inputNombre.value = contactoBuscado.nombre;
   inputApellido.value = contactoBuscado.apellido;
-  inputTelefono.value = contactoBuscado.telefono;
   inputEmail.value = contactoBuscado.email;
-  inputImagen.value = contactoBuscado.imagen;
-  inputEmpresa.value = contactoBuscado.empresa;
-  inputPuestoTrabajo.value = contactoBuscado.puestoTrabajo;
   inputDireccion.value = contactoBuscado.direccion;
+  inputEmpresa.value = contactoBuscado.empresa;
+  inputImagen.value = contactoBuscado.imagen;
   inputNotas.value = contactoBuscado.notas;
+  inputPuestoTrabajo.value = contactoBuscado.puestoTrabajo;
+  inputTelefono.value = contactoBuscado.telefono;
   idContacto = id;
-  // cambio la variable que controla el crear/editar
-
-  //  abrir el modal
-  modalFormContacto.show();
+  //cambio la variable que controla el crear/editar
+  estoyCreando = false;
+  //abrir el modal
+  modalFormularioContacto.show();
 };
 
-function editarContacto() {
+const editarContacto = () => {
+  console.log("aqui tengo que editar");
   //buscar en que posicion del array esta el contacto con ID
   const indiceContacto = agenda.findIndex(
     (contacto) => contacto.id === idContacto
   );
-  // modificar el contacto
+  //modificar el contacto
   agenda[indiceContacto].nombre = inputNombre.value;
   agenda[indiceContacto].apellido = inputApellido.value;
-  agenda[indiceContacto].telefono = inputTelefono.value;
   agenda[indiceContacto].email = inputEmail.value;
+  agenda[indiceContacto].telefono = inputTelefono.value;
   agenda[indiceContacto].imagen = inputImagen.value;
-  agenda[indiceContacto].empresa = inputEmpresa.value;
-  agenda[indiceContacto].puestoTrabajo = inputPuestoTrabajo.value;
-  agenda[indiceContacto].direccion = inputDireccion.value;
-  agenda[indiceContacto].notas = inputNotas.value;
-  // actualizar el local storage
-  guardarLocalStorage();
-  // actualizar el tbody
-  //cerrar el modal
-  modalFormContacto.hide();
-}
+  //  todo: agregar el resto de los inputs
+  //actualizar el localstorage
+  guardarLocalstorage();
+  //actualizar fila de la tabla
 
-// ! MANEJADORES DE EVENTOS
+  //cerrar el modal
+  modalFormularioContacto.hide();
+
+  // todo: mostrar una ventana de sweetalert para indicar que el contacto fue editado correctamente.
+};
+
+const validacion = () => {
+  let datosValidos = true;
+  if (!validarCantidadCaracteres(inputNombre, 2, 50)) {
+    datosValidos = false;
+  }
+  if (!validarCantidadCaracteres(inputApellido, 3, 50)) {
+    datosValidos = false;
+  }
+  return datosValidos;
+};
+
+//manejadores de eventos
 btnAgregarContacto.addEventListener("click", () => {
   limpiarFormulario();
   estoyCreando = true;
-  modalFormContacto.show();
+  modalFormularioContacto.show();
 });
 
 formularioContacto.addEventListener("submit", (e) => {
   e.preventDefault();
-  // aqui tengo que crear / editar contacto
+  //aqui tengo que crear/editar un contacto
   if (estoyCreando) {
     crearContacto();
   } else {
